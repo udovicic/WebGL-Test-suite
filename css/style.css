@@ -1,0 +1,75 @@
+.config {
+    height: 100%;
+    border-right: 1px solid #ddd;
+}
+
+.preview {
+    height: 100%;
+}
+
+html, body, #content {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    height: 50px;
+    margin: 0;
+    padding: 15px;
+}
+
+.tabs {
+    position: absolute;
+    top: 50px;
+    bottom: 90px;
+    left: 20px;
+    right: 20px;
+}
+
+.tab-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60px;
+    bottom: 0;
+}
+
+.tab-pane {
+    height: 100%;
+}
+
+.controls {
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+    height: 90px;
+    margin: 0;
+    padding-top: 20px;
+    text-align: right;
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    resize: none;
+
+}
+
+.canvas-holder {
+    position: absolute;
+    top: 110px;
+    bottom: 90px;
+    left: 20px;
+    right: 20px;
+}
+
+#preview {
+    border: 1px solid #ddd;
+    width: 100%;
+    height: 100%;
+}
