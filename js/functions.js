@@ -1,4 +1,6 @@
-// initi function
+/**
+ * Initialize editor
+ */
 jQuery(function() {
     // Broser support test
     if (Modernizr.canvas !== true) {
@@ -13,9 +15,44 @@ jQuery(function() {
         displayMessage('Browser not supported!', 'Your broser does not support local storage. Changes will not be saved.');
     }
 
+    // Editor elements
+    var vertex_el = jQuery('#vertex-shader');
+    var fragment_el = jQuery('#fragment-shader');
+    var model_el = jQuery('#json-model');
+
+    // Load everything at boot time
+    load(vertex_el, fragment_el, model_el);
+
+    // Add apply button handler
+    jQuery('#btnApply').on('click', function() {
+        save(vertex_el.val(), fragment_el.val(), model_el.val());
+    });
+
     // Init preview
     previewInit();
 });
+
+/**
+ * Save editor state
+ */
+function save(vertex, fragment, model) {
+    localStorage.setItem("vertex", vertex);
+    localStorage.setItem("fragment", fragment);
+    localStorage.setItem("model", model);
+}
+
+/**
+ * Load editor state
+ */
+function load(vertex_el, fragment_el, model_el) {
+    vertex = localStorage.vertex;
+    fragment = localStorage.fragment;
+    model = localStorage.model;
+
+    if (vertex) vertex_el.val(vertex);
+    if (fragment) fragment_el.val(fragment);
+    if (model) model_el.val(model);
+}
 
 /**
  * Displays message in modal box
@@ -26,6 +63,9 @@ function displayMessage(title, msg) {
     jQuery('#message').modal();
 }
 
+/**
+ * Initialzie WebGL
+ */
 function previewInit() {
     // Element dimensions
     var canvasHolder = jQuery("#preview").first();
@@ -74,6 +114,4 @@ function previewInit() {
     }
     var clock = new THREE.Clock;
     render();
-
-
 }
