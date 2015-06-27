@@ -29,8 +29,8 @@ jQuery(function() {
         preview
             .load()
             .initContext()
-            .dummyObject()
-            .render();
+            .dummyObject2()
+            .animate();
     } catch(err) {
         displayMessage('Runtime error', err);
     }
@@ -46,9 +46,7 @@ function displayMessage(title, msg) {
 
 // Save editor state
 jQuery('#btnApply').on('click', function() {
-    localStorage.setItem("vertex", vertex_el.val());
-    localStorage.setItem("fragment", ragment_el.val());
-    localStorage.setItem("model", modmodel_el.val());
+    preview.save();
 
     // TODO: Apply changes to preview object
 });
@@ -62,7 +60,7 @@ function editor(vertex, fragment, model, preview) {
     this.preview_el     = preview.first();
 
     // Load source code from localstorage
-    this.load = function () {
+    this.load = function() {
         vertex      = localStorage.vertex;
         fragment    = localStorage.fragment;
         model       = localStorage.model;
@@ -72,6 +70,13 @@ function editor(vertex, fragment, model, preview) {
         if (model)      this.model_el.val(model);
 
         return this;
+    }
+
+    // Save source code to localstorage
+    this.save = function() {
+        localStorage.setItem("vertex", this.vertex_el.val());
+        localStorage.setItem("fragment", this.fragment_el.val());
+        localStorage.setItem("model", this.model_el.val());
     }
 
     // Initialize WebGL context
@@ -86,10 +91,10 @@ function editor(vertex, fragment, model, preview) {
         this.preview_el.append(this.gl_renderer.domElement);
 
         // Create GL scene
-        this.gl_scene = new THREE.Scene;
+        this.gl_scene = new THREE.Scene();
 
         // Cretae GL Clock for controling fps
-        this.gl_clock = new THREE.Clock;
+        this.gl_clock = new THREE.Clock();
 
         return this;
     }
@@ -99,6 +104,25 @@ function editor(vertex, fragment, model, preview) {
         var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
         var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x1ec876 });
         this.gl_object   = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+        this.gl_scene.add(this.gl_object);
+
+        return this;
+    }
+
+    this.dummyObject2 = function()
+    {
+        var radius = 50,
+            segments = 16,
+            rings = 16;
+        var sphereGeometry  = new THREE.SphereGeometry(radius, segments, rings);
+        // var sphereMaterial  = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
+        var sphereMaterial  = new THREE.ShaderMaterial({
+            vertexShader:   this.vertex_el.val(),
+            fragmentShader: this.fragment_el.val()
+        });
+
+        this.gl_object      = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
         this.gl_scene.add(this.gl_object);
 
@@ -122,6 +146,8 @@ function editor(vertex, fragment, model, preview) {
         var width       = this.preview_el.width();
         this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
+        // camera starts at 0,0,0
+        // pull it back, and move up to get top-down perspective
         this.gl_camera.position.y = 160;
         this.gl_camera.position.z = 400;
         this.gl_camera.lookAt(this.gl_object.position);
@@ -131,15 +157,26 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
-    // Start rendering scene
+    // Animate object (rotation around Y-axis)
+    this.animate = function() {
+        this
+            .render()
+            ._render_callback();
+
+        return this;
+    }
+
+    // Render single frame
     this.render = function() {
         if (typeof(this.gl_object) == 'undefined')
             throw 'Unable to render: Object not initialized';
 
         this
             .initLight()
-            .initCamera()
-            ._render_callback();
+            .initCamera();
+
+        // Render scene
+        this.gl_renderer.render(this.gl_scene, this.gl_camera);
 
         return this;
     }
