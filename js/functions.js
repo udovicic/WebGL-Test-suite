@@ -1,9 +1,7 @@
-/**
- * Initialize editor
- */
-
+// main object
 var preview;
 
+// Initialization
 jQuery(function() {
     // Broser support test
     if (Modernizr.canvas !== true) {
@@ -18,47 +16,46 @@ jQuery(function() {
         displayMessage('Browser not supported!', 'Your broser does not support local storage. Changes will not be saved.');
     }
 
-    // iinitialize preview object
+    // Creating editor object
     preview = new editor(
         $('#vertex-shader'),
         $('#fragment-shader'),
         $('#json-model'),
         jQuery("#preview")
     );
-    preview
-        .load()
-        .initContext()
-        .fakeObject()
-        .initLight()
-        .initCamera()
-        .render();
 
-
+    // Trigger rendering
+    try {
+        preview
+            .load()
+            .initContext()
+            .dummyObject()
+            .render();
+    } catch(err) {
+        displayMessage('Runtime error', err);
+    }
 
 });
 
-/**
- * Save editor state
- */
-jQuery('#btnApply').on('click', function() {
-    localStorage.setItem("vertex", vertex_el.val());
-    localStorage.setItem("fragment", ragment_el.val());
-    localStorage.setItem("model", modmodel_el.val());
-});
-
-/**
- * Displays message in modal box
- */
+// Display message in modal box
 function displayMessage(title, msg) {
     jQuery("#msgTitle").html(title);
     jQuery("#msgText").html(msg);
     jQuery('#message').modal();
 }
 
-/**
- * Editor class
- */
+// Save editor state
+jQuery('#btnApply').on('click', function() {
+    localStorage.setItem("vertex", vertex_el.val());
+    localStorage.setItem("fragment", ragment_el.val());
+    localStorage.setItem("model", modmodel_el.val());
+
+    // TODO: Apply changes to preview object
+});
+
+// Editor object
 function editor(vertex, fragment, model, preview) {
+    // Store elements uopn object creation
     this.vertex_el      = vertex;
     this.fragment_el    = fragment;
     this.model_el       = model;
@@ -66,9 +63,9 @@ function editor(vertex, fragment, model, preview) {
 
     // Load source code from localstorage
     this.load = function () {
-        vertex = localStorage.vertex;
-        fragment = localStorage.fragment;
-        model = localStorage.model;
+        vertex      = localStorage.vertex;
+        fragment    = localStorage.fragment;
+        model       = localStorage.model;
 
         if (vertex)     this.vertex_el.val(vertex);
         if (fragment)   this.fragment_el.val(fragment);
@@ -80,8 +77,8 @@ function editor(vertex, fragment, model, preview) {
     // Initialize WebGL context
     this.initContext = function() {
         // Element dimensions
-        var height = this.preview_el.height();
-        var width = this.preview_el.width();
+        var height  = this.preview_el.height();
+        var width   = this.preview_el.width();
 
         // Create GL Context
         this.gl_renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -97,17 +94,18 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
-    this.fakeObject = function() {
+    // Create dummy object
+    this.dummyObject = function() {
         var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
         var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x1ec876 });
-        this.gl_object = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        this.gl_object.rotation.y = Math.PI * 45 /  180;
+        this.gl_object   = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
         this.gl_scene.add(this.gl_object);
 
         return this;
     }
 
+    // Initialize light source
     this.initLight = function() {
         this.gl_point_light = new THREE.PointLight(0xffffff);
         this.gl_point_light.position.set(0, 300, 200);
@@ -117,12 +115,13 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
+    // Initialize camera
     this.initCamera = function() {
         // Element dimensions
-        var height = this.preview_el.height();
-        var width = this.preview_el.width();
+        var height      = this.preview_el.height();
+        var width       = this.preview_el.width();
+        this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
-        this.gl_camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
         this.gl_camera.position.y = 160;
         this.gl_camera.position.z = 400;
         this.gl_camera.lookAt(this.gl_object.position);
@@ -132,11 +131,34 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
+    // Start rendering scene
     this.render = function() {
+        if (typeof(this.gl_object) == 'undefined')
+            throw 'Unable to render: Object not initialized';
+
+        this
+            .initLight()
+            .initCamera()
+            ._render_callback();
+
+        return this;
+    }
+
+    // Stop animation
+    this.stop = function() {
+        cancelAnimationFrame(this.gl_animation);
+    }
+
+    // Callback function for rendering
+    this._render_callback = function() {
+        // Render scene
         this.gl_renderer.render(this.gl_scene, this.gl_camera);
 
+        // Perform object rotation
         this.gl_object.rotation.y -= this.gl_clock.getDelta();
-        requestAnimationFrame(this.render.bind(this));
+
+        // Loop animation
+        this.gl_animation = requestAnimationFrame(this._render_callback.bind(this));
     }
 
     return this;
