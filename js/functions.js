@@ -29,9 +29,10 @@ jQuery(function() {
         preview
             .load()
             .initContext()
-            .dummyObject2()
+            .initObject()
             .render();
     } catch(err) {
+        // TODO: Display error line or more descriptive errors
         displayMessage('Runtime error', err);
     }
 
@@ -45,10 +46,18 @@ function displayMessage(title, msg) {
 }
 
 // Save editor state
-jQuery('#btnApply').on('click', function() {
+jQuery('#btnLoad').on('click', function() {
+    preview.load();
+});
+jQuery('#btnSave').on('click', function() {
     preview.save();
-
-    // TODO: Apply changes to preview object
+    displayMessage("Success", "Code has been save to your browser");
+});
+jQuery('#btnApply').on('click', function() {
+    preview
+        .stop()
+        .initObject()
+        .render();
 });
 
 // Editor object
@@ -99,30 +108,21 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
-    // Create dummy object
-    this.dummyObject = function() {
-        var cubeGeometry = new THREE.BoxGeometry(100, 100, 100);
-        var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x1ec876 });
-        this.gl_object   = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    // Create object
+    this.initObject = function() {
+        // Create mesh from JSON input
+        // TODO: FIX ME
+        var loader      = new THREE.JSONLoader;
+        var code        = JSON.parse(this.model_el.val());
+        var mesh        = loader.parse(code);
 
-        this.gl_scene.add(this.gl_object);
-
-        return this;
-    }
-
-    this.dummyObject2 = function()
-    {
-        var radius = 50,
-            segments = 16,
-            rings = 16;
-        var sphereGeometry  = new THREE.SphereGeometry(radius, segments, rings);
-        // var sphereMaterial  = new THREE.MeshLambertMaterial({ color: 0xcc0000 });
-        var sphereMaterial  = new THREE.ShaderMaterial({
+        // TODO: Check for errors on program compilation
+        var material    = new THREE.ShaderMaterial({
             vertexShader:   this.vertex_el.val(),
             fragmentShader: this.fragment_el.val()
         });
 
-        this.gl_object      = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        this.gl_object      = new THREE.Mesh(mesh, material);
 
         this.gl_scene.add(this.gl_object);
 
@@ -170,7 +170,13 @@ function editor(vertex, fragment, model, preview) {
 
     // Stop animation
     this.stop = function() {
+        if (typeof(this.gl_animation) == 'undefined')
+            return this;
+
         cancelAnimationFrame(this.gl_animation);
+        delete this.gl_animation;
+
+        return this;
     }
 
     // Callback function for rendering
