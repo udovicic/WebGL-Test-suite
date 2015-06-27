@@ -30,7 +30,7 @@ jQuery(function() {
             .load()
             .initContext()
             .dummyObject2()
-            .animate();
+            .render();
     } catch(err) {
         displayMessage('Runtime error', err);
     }
@@ -129,16 +129,6 @@ function editor(vertex, fragment, model, preview) {
         return this;
     }
 
-    // Initialize light source
-    this.initLight = function() {
-        this.gl_point_light = new THREE.PointLight(0xffffff);
-        this.gl_point_light.position.set(0, 300, 200);
-
-        this.gl_scene.add(this.gl_point_light);
-
-        return this;
-    }
-
     // Initialize camera
     this.initCamera = function() {
         // Element dimensions
@@ -146,9 +136,7 @@ function editor(vertex, fragment, model, preview) {
         var width       = this.preview_el.width();
         this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
 
-        // camera starts at 0,0,0
-        // pull it back, and move up to get top-down perspective
-        this.gl_camera.position.y = 160;
+        // camera starts at 0,0,0 - pull it back
         this.gl_camera.position.z = 400;
         this.gl_camera.lookAt(this.gl_object.position);
 
@@ -171,9 +159,8 @@ function editor(vertex, fragment, model, preview) {
         if (typeof(this.gl_object) == 'undefined')
             throw 'Unable to render: Object not initialized';
 
-        this
-            .initLight()
-            .initCamera();
+        // Initialize other object
+        this.initCamera();
 
         // Render scene
         this.gl_renderer.render(this.gl_scene, this.gl_camera);
