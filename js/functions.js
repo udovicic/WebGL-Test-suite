@@ -18,11 +18,18 @@ jQuery(function() {
 
     // Creating editor object
     preview = new editor(
-        $('#vertex-shader'),
-        $('#fragment-shader'),
-        $('#json-model'),
+        CodeMirror.fromTextArea(jQuery('#vertex-shader')[0],{lineNumbers: true}),
+        CodeMirror.fromTextArea(jQuery('#fragment-shader')[0],{lineNumbers: true}),
+        CodeMirror.fromTextArea(jQuery('#json-model')[0],{lineNumbers: true}),
         jQuery("#preview")
     );
+
+    // hack for gui glitch
+    $('ul.nav').children('li').on('click', function() {
+        setTimeout(function() {
+            preview._el_refresh()
+        }, 10);
+    });
 
     // Trigger rendering
     try {
@@ -74,18 +81,18 @@ function editor(vertex, fragment, model, preview) {
         fragment    = localStorage.fragment;
         model       = localStorage.model;
 
-        if (vertex)     this.vertex_el.val(vertex);
-        if (fragment)   this.fragment_el.val(fragment);
-        if (model)      this.model_el.val(model);
+        if (vertex)     this.vertex_el.setValue(vertex);
+        if (fragment)   this.fragment_el.setValue(fragment);
+        if (model)      this.model_el.setValue(model);
 
         return this;
     }
 
     // Save source code to localstorage
     this.save = function() {
-        localStorage.setItem("vertex", this.vertex_el.val());
-        localStorage.setItem("fragment", this.fragment_el.val());
-        localStorage.setItem("model", this.model_el.val());
+        localStorage.setItem("vertex", this.vertex_el.getValue());
+        localStorage.setItem("fragment", this.fragment_el.getValue());
+        localStorage.setItem("model", this.model_el.getValue());
     }
 
     // Initialize WebGL context
@@ -189,6 +196,12 @@ function editor(vertex, fragment, model, preview) {
 
         // Loop animation
         this.gl_animation = requestAnimationFrame(this._render_callback.bind(this));
+    }
+
+    this._el_refresh = function() {
+        this.vertex_el.refresh();
+        this.fragment_el.refresh();
+        this.model_el.refresh();
     }
 
     return this;
