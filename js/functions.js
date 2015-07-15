@@ -117,19 +117,34 @@ function editor(vertex, fragment, model, preview) {
 
     // Create object
     this.initObject = function() {
-        // Create mesh from JSON input
-        // TODO: FIX ME
-        var loader      = new THREE.JSONLoader;
-        var code        = JSON.parse(this.model_el.val());
-        var mesh        = loader.parse(code);
+        try {
+            var loader      = new THREE.JSONLoader;
+            var code        = JSON.parse(this.model_el.getValue());
+            var mesh        = loader.parse(code);
+        } catch (err) {
+            console.log(err);
+            displayMessage('Init object error', 'Unable to parse JSON: ' + err);
+            return this;
+        }
 
-        // TODO: Check for errors on program compilation
-        var material    = new THREE.ShaderMaterial({
-            vertexShader:   this.vertex_el.val(),
-            fragmentShader: this.fragment_el.val()
-        });
+        try {
+            var material = new THREE.ShaderMaterial({
+                vertexShader:   this.vertex_el.getValue(),
+                fragmentShader: this.fragment_el.getValue()
+            });
+        } catch (err) {
+            console.log(2);
+            displayMessage('Init object error', 'Unable to compile shaders: ' + err);
+            return this;
+        }
 
-        this.gl_object      = new THREE.Mesh(mesh, material);
+        try {
+            this.gl_object = new THREE.Mesh(mesh.geometry, material);
+        } catch (err) {
+            console.log(3);
+            displayMessage('Init object error', 'Unable to create object: ' + err);
+            return this;
+        }
 
         this.gl_scene.add(this.gl_object);
 
@@ -170,7 +185,13 @@ function editor(vertex, fragment, model, preview) {
         this.initCamera();
 
         // Render scene
-        this.gl_renderer.render(this.gl_scene, this.gl_camera);
+        try {
+            this.gl_renderer.render(this.gl_scene, this.gl_camera);
+        } catch (err) {
+            displayMessage('Rendering error', 'Unable to render frame: ' + err);
+            return;
+        }
+
 
         return this;
     }
