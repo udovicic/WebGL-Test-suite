@@ -18,9 +18,23 @@ jQuery(function() {
 
     // Creating editor object
     preview = new editor(
-        CodeMirror.fromTextArea(jQuery('#vertex-shader')[0],{lineNumbers: true}),
-        CodeMirror.fromTextArea(jQuery('#fragment-shader')[0],{lineNumbers: true}),
-        CodeMirror.fromTextArea(jQuery('#json-model')[0],{lineNumbers: true}),
+        CodeMirror.fromTextArea(jQuery('#vertex-shader')[0],{
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            mode: "text/x-c++src"
+        }),
+        CodeMirror.fromTextArea(jQuery('#fragment-shader')[0],{
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            mode: "text/x-c++src"
+        }),
+        CodeMirror.fromTextArea(jQuery('#json-model')[0],{
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true
+        }),
         jQuery("#preview")
     );
 
