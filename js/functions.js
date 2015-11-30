@@ -1,9 +1,9 @@
-// main object
+// Main object
 var preview;
 
 // Initialization
 jQuery(function() {
-    // Broser support test
+    // Browser support test
     if (Modernizr.canvas !== true) {
         displayMessage('Browser not supported!', 'Your browser does not support canvas. Unable to continue.');
         return;
@@ -17,7 +17,7 @@ jQuery(function() {
     }
 
     // Creating editor object
-    preview = new editor(
+    preview = new Editor(
         CodeMirror.fromTextArea(jQuery('#vertex-shader')[0],{
             lineNumbers: true,
             matchBrackets: true,
@@ -38,7 +38,7 @@ jQuery(function() {
         jQuery("#preview")
     );
 
-    // hack for gui glitch
+    // Hack for gui glitch
     $('ul.nav').children('li').on('click', function() {
         setTimeout(function() {
             preview._el_refresh()
@@ -82,14 +82,14 @@ jQuery('#btnApply').on('click', function() {
 });
 
 // Editor object
-function editor(vertex, fragment, model, preview) {
-    // Store elements uopn object creation
+function Editor(vertex, fragment, model, preview) {
+    // Store elements upon object creation
     this.vertex_el      = vertex;
     this.fragment_el    = fragment;
     this.model_el       = model;
     this.preview_el     = preview.first();
 
-    // Load source code from localstorage
+    // Load source code from local storage
     this.load = function() {
         vertex      = localStorage.vertex;
         fragment    = localStorage.fragment;
@@ -100,14 +100,14 @@ function editor(vertex, fragment, model, preview) {
         if (model)      this.model_el.setValue(model);
 
         return this;
-    }
+    };
 
-    // Save source code to localstorage
+    // Save source code to local storage
     this.save = function() {
         localStorage.setItem("vertex", this.vertex_el.getValue());
         localStorage.setItem("fragment", this.fragment_el.getValue());
         localStorage.setItem("model", this.model_el.getValue());
-    }
+    };
 
     // Initialize WebGL context
     this.initContext = function() {
@@ -123,11 +123,11 @@ function editor(vertex, fragment, model, preview) {
         // Create GL scene
         this.gl_scene = new THREE.Scene();
 
-        // Cretae GL Clock for controling fps
+        // Create GL Clock for controlling fps
         this.gl_clock = new THREE.Clock();
 
         return this;
-    }
+    };
 
     // Create object
     this.initObject = function() {
@@ -163,7 +163,7 @@ function editor(vertex, fragment, model, preview) {
         this.gl_scene.add(this.gl_object);
 
         return this;
-    }
+    };
 
     // Initialize camera
     this.initCamera = function() {
@@ -179,16 +179,7 @@ function editor(vertex, fragment, model, preview) {
         this.gl_scene.add(this.gl_camera);
 
         return this;
-    }
-
-    // Animate object (rotation around Y-axis)
-    this.animate = function() {
-        this
-            .render()
-            ._render_callback();
-
-        return this;
-    }
+    };
 
     // Render single frame
     this.render = function() {
@@ -206,9 +197,8 @@ function editor(vertex, fragment, model, preview) {
             return;
         }
 
-
         return this;
-    }
+    };
 
     // Stop animation
     this.stop = function() {
@@ -219,7 +209,7 @@ function editor(vertex, fragment, model, preview) {
         delete this.gl_animation;
 
         return this;
-    }
+    };
 
     // Callback function for rendering
     this._render_callback = function() {
@@ -231,13 +221,13 @@ function editor(vertex, fragment, model, preview) {
 
         // Loop animation
         this.gl_animation = requestAnimationFrame(this._render_callback.bind(this));
-    }
+    };
 
     this._el_refresh = function() {
         this.vertex_el.refresh();
         this.fragment_el.refresh();
         this.model_el.refresh();
-    }
+    };
 
     return this;
 }
