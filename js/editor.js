@@ -42,9 +42,6 @@ function Editor(vertex, fragment, model, preview) {
         // Create GL scene
         this.gl_scene = new THREE.Scene();
 
-        // Create GL Clock for controlling fps
-        this.gl_clock = new THREE.Clock();
-
         return this;
     };
 
@@ -129,6 +126,9 @@ function Editor(vertex, fragment, model, preview) {
 
     // Animate object (rotation around Y-axis)
     this.animate = function() {
+        // Create GL Clock for controlling fps
+        this.gl_clock = new THREE.Clock();
+        
         this
             .render()
             ._render_callback();
