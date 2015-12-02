@@ -128,7 +128,7 @@ function Editor(vertex, fragment, model, preview) {
     this.animate = function() {
         // Create GL Clock for controlling fps
         this.gl_clock = new THREE.Clock();
-        
+
         this
             .render()
             ._render_callback();

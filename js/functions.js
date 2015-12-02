@@ -47,7 +47,7 @@ jQuery(function() {
             .load(1)
             .initContext()
             .initObject()
-            .animate();
+            .render();
     } catch(err) {
         // TODO: Display error line or more descriptive errors
         displayMessage('Runtime error', err);
