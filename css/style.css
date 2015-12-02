@@ -46,10 +46,21 @@ h1 {
     position: absolute;
     right: 20px;
     bottom: 0px;
+    left: 15px;
     height: 90px;
     margin: 0;
     padding-top: 20px;
     text-align: right;
+}
+
+.controls .left {
+    position: relative;
+    float: left;
+}
+
+.controls .right {
+    position: relative;
+    float: right;
 }
 
 .CodeMirror {
