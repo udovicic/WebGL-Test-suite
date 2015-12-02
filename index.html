@@ -22,24 +22,26 @@
             <div class="tabs" role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
-                        <a href="#fragment" aira-control="fragment" role="tab" data-toggle="tab">Fragment shader</a>
-                    </li>
-                    <li role="presentation">
                         <a href="#vertex" aria-control="vertex" role="tab" data-toggle="tab">Vertex shader</a>
                     </li>
+
+                    <li role="presentation">
+                        <a href="#fragment" aira-control="fragment" role="tab" data-toggle="tab">Fragment shader</a>
+                    </li>
+
                     <li role="presentation">
                         <a href="#model" aria-control="model" role="tab" data-toggle="tab">JSON model</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <!-- Fragment shader tab -->
-                    <div role="tabpanel" class="tab-pane active" id="fragment">
-                        <textarea name="fragment-shader" id="fragment-shader" title="Fragment shader"></textarea>
+                    <!-- Vertex shader tab -->
+                    <div role="tabpanel" class="tab-pane active" id="vertex">
+                        <textarea name="vertex-shader" id="vertex-shader" title="Vertex shader"></textarea>
                     </div>
 
-                    <!-- Vertex shader tab -->
-                    <div role="tabpanel" class="tab-pane" id="vertex">
-                        <textarea name="vertex-shader" id="vertex-shader" title="Vertex shader"></textarea>
+                    <!-- Fragment shader tab -->
+                    <div role="tabpanel" class="tab-pane" id="fragment">
+                        <textarea name="fragment-shader" id="fragment-shader" title="Fragment shader"></textarea>
                     </div>
 
                     <!-- Model input tab -->
@@ -85,7 +87,7 @@
     <!-- JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.js"></script>
     <script src="js/modernizr.js"></script>
     <script src="js/codemirror/codemirror.js"></script>
     <script src="js/codemirror/matchbrackets.js"></script>

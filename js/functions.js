@@ -22,18 +22,21 @@ jQuery(function() {
             lineNumbers: true,
             matchBrackets: true,
             styleActiveLine: true,
-            mode: "text/x-c++src"
+            mode: "text/x-c++src",
+            indentUnit: 4
         }),
         CodeMirror.fromTextArea(jQuery('#fragment-shader')[0],{
             lineNumbers: true,
             matchBrackets: true,
             styleActiveLine: true,
-            mode: "text/x-c++src"
+            mode: "text/x-c++src",
+            indentUnit: 4
         }),
         CodeMirror.fromTextArea(jQuery('#json-model')[0],{
             lineNumbers: true,
             matchBrackets: true,
-            styleActiveLine: true
+            styleActiveLine: true,
+            indentUnit: 4
         }),
         jQuery("#preview")
     );
@@ -51,7 +54,7 @@ jQuery(function() {
             .load()
             .initContext()
             .initObject()
-            .render();
+            .animate();
     } catch(err) {
         // TODO: Display error line or more descriptive errors
         displayMessage('Runtime error', err);
@@ -78,7 +81,7 @@ jQuery('#btnApply').on('click', function() {
     preview
         .stop()
         .initObject()
-        .render();
+        .animate();
 });
 
 // Editor object
@@ -147,20 +150,19 @@ function Editor(vertex, fragment, model, preview) {
                 fragmentShader: this.fragment_el.getValue()
             });
         } catch (err) {
-            console.log(2);
             displayMessage('Init object error', 'Unable to compile shaders: ' + err);
             return this;
         }
 
         try {
             this.gl_object = new THREE.Mesh(mesh.geometry, material);
+            this.gl_renderer.setClearColor(0xeeeefa);
         } catch (err) {
-            console.log(3);
             displayMessage('Init object error', 'Unable to create object: ' + err);
             return this;
         }
 
-        this.gl_scene.add(this.gl_object);
+        this.gl_object.name = "gl_object";
 
         return this;
     };
@@ -170,11 +172,18 @@ function Editor(vertex, fragment, model, preview) {
         // Element dimensions
         var height      = this.preview_el.height();
         var width       = this.preview_el.width();
-        this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 0.1, 10000);
+        this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 1, 10000);
 
-        // camera starts at 0,0,0 - pull it back
-        this.gl_camera.position.z = 400;
+        // Camera starts at 0,0,0 - pull it back
+        this.gl_camera.position.set(0, 1, 2.5);
+
+        // Adjust camera direction
         this.gl_camera.lookAt(this.gl_object.position);
+
+        // Adjust view matrix if necessary
+        //this.gl_camera.position.y += 0.5;
+
+        this.gl_camera.name = "gl_camera";
 
         this.gl_scene.add(this.gl_camera);
 
@@ -189,6 +198,9 @@ function Editor(vertex, fragment, model, preview) {
         // Initialize other object
         this.initCamera();
 
+        this.gl_scene.remove(this.gl_scene.getObjectByName('gl_object'));
+        this.gl_scene.add(this.gl_object);
+
         // Render scene
         try {
             this.gl_renderer.render(this.gl_scene, this.gl_camera);
@@ -196,6 +208,15 @@ function Editor(vertex, fragment, model, preview) {
             displayMessage('Rendering error', 'Unable to render frame: ' + err);
             return;
         }
+
+        return this;
+    };
+
+    // Animate object (rotation around Y-axis)
+    this.animate = function() {
+        this
+            .render()
+            ._render_callback();
 
         return this;
     };
@@ -217,7 +238,7 @@ function Editor(vertex, fragment, model, preview) {
         this.gl_renderer.render(this.gl_scene, this.gl_camera);
 
         // Perform object rotation
-        this.gl_object.rotation.y -= this.gl_clock.getDelta();
+        this.gl_object.rotateY(this.gl_clock.getDelta());
 
         // Loop animation
         this.gl_animation = requestAnimationFrame(this._render_callback.bind(this));

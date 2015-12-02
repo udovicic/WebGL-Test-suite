@@ -356,12 +356,12 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
 
   def(["text/x-c++src", "text/x-c++hdr"], {
     name: "clike",
-    keywords: words(cKeywords + " asm dynamic_cast namespace reinterpret_cast try explicit new " +
+    keywords: words(cKeywords + "dot asm dynamic_cast namespace reinterpret_cast try explicit new " +
                     "static_cast typeid catch operator template typename class friend private " +
                     "this using const_cast inline public throw virtual delete mutable protected " +
                     "alignas alignof constexpr decltype nullptr noexcept thread_local final " +
                     "static_assert override"),
-    types: words(cTypes + " bool wchar_t"),
+    types: words(cTypes + " varying uniform vec3 vec4 bool wchar_t"),
     blockKeywords: words("catch class do else finally for if struct switch try while"),
     defKeywords: words("class namespace struct enum union"),
     typeFirstDefinitions: true,
