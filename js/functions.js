@@ -22,14 +22,14 @@ jQuery(function() {
             lineNumbers: true,
             matchBrackets: true,
             styleActiveLine: true,
-            mode: "text/x-c++src",
+            mode: "x-shader/x-vertex",
             indentUnit: 4
         }),
         CodeMirror.fromTextArea(jQuery('#fragment-shader')[0],{
             lineNumbers: true,
             matchBrackets: true,
             styleActiveLine: true,
-            mode: "text/x-c++src",
+            mode: "x-shader/x-fragment",
             indentUnit: 4
         }),
         CodeMirror.fromTextArea(jQuery('#json-model')[0],{
