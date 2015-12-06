@@ -31,8 +31,8 @@ function Editor(vertex, fragment, model, preview) {
     // Initialize WebGL context
     this.initContext = function() {
         // Element dimensions
-        var height  = this.preview_el.height();
         var width   = this.preview_el.width();
+        var height  = this.preview_el.height();
 
         // Create GL Context
         this.gl_renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -41,6 +41,75 @@ function Editor(vertex, fragment, model, preview) {
 
         // Create GL scene
         this.gl_scene = new THREE.Scene();
+        this.gl_scene_plane = new THREE.Scene();
+
+        // Create texture for multi-pass rendering
+        this.gl_texture_normal = new THREE.WebGLRenderTarget(width, height);
+        this.gl_texture_toon = new THREE.WebGLRenderTarget(width, height);
+
+        // Init camera object
+        this.initCamera();
+
+        this.compileProgram();
+
+        // Plane scene setup
+        var geometry = new THREE.PlaneGeometry(width, height);
+        //var material = new THREE.MeshLambertMaterial({ map : this.gl_texture_normal });
+        var plane = new THREE.Mesh( geometry, new THREE.ShaderMaterial({
+            uniforms: {
+                pass:   { type: "i", value: 3 },
+                tNormal:{ type: "t", value: this.gl_texture_normal },
+                tToon:  { type: "t", value: this.gl_texture_toon },
+                aspect: { type: "v2", value: new THREE.Vector2(this.preview_el.width(), this.preview_el.height()) }
+            },
+            vertexShader:   this.vertex_el.getValue(),
+            fragmentShader: this.fragment_el.getValue()
+        }) );
+        this.gl_scene_plane.add( plane );
+        this.gl_camera_plane.lookAt(plane);
+
+        var lights;
+        lights = new THREE.PointLight( 0xffffff, 1, 0 );
+
+        lights.position.set( 0, 0, 300 );
+
+        this.gl_scene_plane.add( lights );
+
+
+        return this;
+    };
+
+    // Initialize camera
+    this.initCamera = function() {
+        // Element dimensions
+        var width       = this.preview_el.width();
+        var height      = this.preview_el.height();
+        this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 1, 10000);
+
+        // Camera starts at 0,0,0 - pull it back
+        this.gl_camera.position.set(0, 1, 2.5);
+
+        this.gl_camera.name = "gl_camera";
+
+        this.gl_scene.add(this.gl_camera);
+
+        this.gl_camera_plane = new THREE.OrthographicCamera(width/-2, width/2, height/2, height/- 2, 1, 10000);
+        this.gl_camera_plane.position.set(0, 0, 1);
+        this.gl_scene_plane.add(this.gl_camera_plane);
+
+        return this;
+    };
+
+    this.compileProgram = function() {
+        this.gl_shader_material = new THREE.ShaderMaterial({
+            uniforms: {
+                pass:   { type: "i", value: 1 },
+                //tNormal:{ type: "t", value: 1 },
+                //tToon:  { type: "t", value: 1 },
+            },
+            vertexShader:   this.vertex_el.getValue(),
+            fragmentShader: this.fragment_el.getValue()
+        });
 
         return this;
     };
@@ -57,17 +126,7 @@ function Editor(vertex, fragment, model, preview) {
         }
 
         try {
-            var material = new THREE.ShaderMaterial({
-                vertexShader:   this.vertex_el.getValue(),
-                fragmentShader: this.fragment_el.getValue()
-            });
-        } catch (err) {
-            displayMessage('Init object error', 'Unable to compile shaders: ' + err);
-            return this;
-        }
-
-        try {
-            this.gl_object = new THREE.Mesh(mesh.geometry, material);
+            this.gl_object = new THREE.Mesh(mesh.geometry, this.gl_shader_material);
             this.gl_renderer.setClearColor(0xeeeefa);
         } catch (err) {
             displayMessage('Init object error', 'Unable to create object: ' + err);
@@ -76,46 +135,41 @@ function Editor(vertex, fragment, model, preview) {
 
         this.gl_object.name = "gl_object";
 
-        return this;
-    };
-
-    // Initialize camera
-    this.initCamera = function() {
-        // Element dimensions
-        var height      = this.preview_el.height();
-        var width       = this.preview_el.width();
-        this.gl_camera  = new THREE.PerspectiveCamera(45, width/height, 1, 10000);
-
-        // Camera starts at 0,0,0 - pull it back
-        this.gl_camera.position.set(0, 1, 2.5);
-
         // Adjust camera direction
         this.gl_camera.lookAt(this.gl_object.position);
-
-        // Adjust view matrix if necessary
-        //this.gl_camera.position.y += 0.5;
-
-        this.gl_camera.name = "gl_camera";
-
-        this.gl_scene.add(this.gl_camera);
 
         return this;
     };
 
     // Render single frame
     this.render = function() {
+        return this
+            .compileProgram()
+            ._render();
+    };
+
+    this._render = function() {
         if (typeof(this.gl_object) == 'undefined')
             throw 'Unable to render: Object not initialized';
-
-        // Initialize other object
-        this.initCamera();
 
         this.gl_scene.remove(this.gl_scene.getObjectByName('gl_object'));
         this.gl_scene.add(this.gl_object);
 
         // Render scene
         try {
-            this.gl_renderer.render(this.gl_scene, this.gl_camera);
+            // First pass - normals
+
+
+            this.gl_object.material.uniforms.pass.value = 1;
+            this.gl_renderer.render(this.gl_scene, this.gl_camera, this.gl_texture_normal, true);
+
+            // Second pass - toon shading
+            this.gl_object.material.uniforms.pass.value = 2;
+            this.gl_renderer.render(this.gl_scene, this.gl_camera, this.gl_texture_toon, true);
+
+            // Third pass - merging
+            this.gl_object.material.uniforms.pass.value = 3;
+            this.gl_renderer.render(this.gl_scene_plane, this.gl_camera_plane);
         } catch (err) {
             displayMessage('Rendering error', 'Unable to render frame: ' + err);
             return;
@@ -130,7 +184,7 @@ function Editor(vertex, fragment, model, preview) {
         this.gl_clock = new THREE.Clock();
 
         this
-            .render()
+            .compileProgram()
             ._render_callback();
 
         return this;
@@ -150,7 +204,7 @@ function Editor(vertex, fragment, model, preview) {
     // Callback function for rendering
     this._render_callback = function() {
         // Render scene
-        this.gl_renderer.render(this.gl_scene, this.gl_camera);
+        this._render();
 
         // Perform object rotation
         this.gl_object.rotateY(this.gl_clock.getDelta());
