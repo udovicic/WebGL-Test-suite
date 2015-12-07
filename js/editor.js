@@ -46,6 +46,7 @@ function Editor(vertex, fragment, model, preview) {
         // Create texture for multi-pass rendering
         this.gl_texture_normal = new THREE.WebGLRenderTarget(width, height);
         this.gl_texture_toon = new THREE.WebGLRenderTarget(width, height);
+        this.gl_texture_dummy = new THREE.WebGLRenderTarget(1, 1);
 
         // Init camera object
         this.initCamera();
@@ -55,16 +56,7 @@ function Editor(vertex, fragment, model, preview) {
         // Plane scene setup
         var geometry = new THREE.PlaneGeometry(width, height);
         //var material = new THREE.MeshLambertMaterial({ map : this.gl_texture_normal });
-        var plane = new THREE.Mesh( geometry, new THREE.ShaderMaterial({
-            uniforms: {
-                pass:   { type: "i", value: 3 },
-                tNormal:{ type: "t", value: this.gl_texture_normal },
-                tToon:  { type: "t", value: this.gl_texture_toon },
-                aspect: { type: "v2", value: new THREE.Vector2(this.preview_el.width(), this.preview_el.height()) }
-            },
-            vertexShader:   this.vertex_el.getValue(),
-            fragmentShader: this.fragment_el.getValue()
-        }) );
+        var plane = new THREE.Mesh( geometry, this.gl_shader_material );
         this.gl_scene_plane.add( plane );
         this.gl_camera_plane.lookAt(plane);
 
@@ -104,8 +96,9 @@ function Editor(vertex, fragment, model, preview) {
         this.gl_shader_material = new THREE.ShaderMaterial({
             uniforms: {
                 pass:   { type: "i", value: 1 },
-                //tNormal:{ type: "t", value: 1 },
-                //tToon:  { type: "t", value: 1 },
+                tNormal:{ type: "t", value: this.gl_texture_dummy },
+                tToon:  { type: "t", value: this.gl_texture_dummy },
+                aspect: { type: "v2", value: new THREE.Vector2(this.preview_el.width(), this.preview_el.height()) }
             },
             vertexShader:   this.vertex_el.getValue(),
             fragmentShader: this.fragment_el.getValue()
@@ -157,10 +150,11 @@ function Editor(vertex, fragment, model, preview) {
 
         // Render scene
         try {
+
             // First pass - normals
-
-
             this.gl_object.material.uniforms.pass.value = 1;
+            this.gl_object.material.uniforms.tNormal.value = this.gl_texture_dummy;
+            this.gl_object.material.uniforms.tToon.value = this.gl_texture_dummy;
             this.gl_renderer.render(this.gl_scene, this.gl_camera, this.gl_texture_normal, true);
 
             // Second pass - toon shading
@@ -169,6 +163,8 @@ function Editor(vertex, fragment, model, preview) {
 
             // Third pass - merging
             this.gl_object.material.uniforms.pass.value = 3;
+            this.gl_object.material.uniforms.tNormal.value = this.gl_texture_normal;
+            this.gl_object.material.uniforms.tToon.value = this.gl_texture_toon;
             this.gl_renderer.render(this.gl_scene_plane, this.gl_camera_plane);
         } catch (err) {
             displayMessage('Rendering error', 'Unable to render frame: ' + err);
