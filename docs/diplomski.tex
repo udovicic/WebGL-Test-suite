@@ -1,0 +1,147 @@
+\documentclass[a4paper]{article}
+
+% geometry
+\usepackage[top=25mm, bottom=25mm, left=25mm, right=20mm]{geometry}
+
+%language
+\usepackage[croatian]{babel}
+\usepackage[utf8]{inputenc}
+
+%additional
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
+\usepackage{times}
+	
+\begin{document}
+
+
+\begin{titlepage}
+	\centering
+	{\bfseries SVEUČILIŠTE JOSIPA JURJA STROSSMAYERA U OSIJEKU\par}
+	{\bfseries FAKULTET ELEKTROTEHNIKE, RAČUNARSTVA I INFORMACIJSKIH TEHNOLOGIJA\par}
+	
+	\vspace{2cm}
+	{\bfseries Sveučilišni studij\par}
+
+	\vspace{4cm}
+	{\huge\bfseries NEFOTOREALISTIČNI PRIKAZ 3D MODELA KORIŠTENJEM CEL-SHADERA\par}
+	
+	\vspace{1cm}
+	{\bfseries Diplomski rad\par}
+	
+	\vspace{2cm}
+	{\Large Stjepan Udovičić\par}
+	
+	\vfill
+	{Osijek, 2016.\par}
+\end{titlepage}
+
+\tableofcontents
+
+
+\section{Uvod}
+Krakti opis racunalne grafike, uloge OpenGL-a, GLSL-a i primjene cel-shadera
+
+\subsection{Zadatak diplomskog rada}
+
+Cilj je razviti prilagođeni sustav sjenčanja za OpenGL koji će 3D modele prikazivati nefotorealistično u svrhu stvaranja dojma da su ručno nacrtani. Potrebno je razviti aplikaciju koja omogućava učitavanje  3D modela iz datoteke te ga prikazuje korištenjem prilagođenog sustava sjenčanja. Funkcionalnost razvijene aplikacije treba testirati prikazivanjem nekoliko 3D modela.
+
+
+\section{OpenGL aplikacijsko sučelje}
+
+Kratki uvod u OpenGL API
+
+\subsection{OpenGL grafički cjevovod}
+
+"Pipeline" način rada OpenGL-a, kako i zašto
+
+\subsection{GLSL}
+
+Vertex, Fragment, Geometry, tessellation shaders. Treba li spomenuti one koje WebGL nema?
+
+\subsection{Transformacije objekta}
+
+MVP - Model*View*Projection princip, te kako prosljedite varijable, gdje ih generirati (CPU ili GPU)
+
+\subsection{WebGL}
+
+Ukratko u tome što je WebGL i kako se raylikuje od ostalih OpenGL implementacija
+
+\subsection{Modeli u Three.js JSON formatu}
+
+Struktura formata
+
+
+
+
+\section{Sjenčanje (shading)}
+
+\subsection{Cel-shading princip}
+
+Što je to uopće i kako se postiže. Koji koraci(slojevi) su potrebni
+
+\subsection{Iscrtavanje obrisa i rubova}
+
+Princip rada
+
+\subsection{Sjenčanje}
+
+Samo bojanje. Možda za ovo postoji bolja riječ?
+
+\subsection{Spajanje slojeva}
+
+Kako se spajaju u cjelinu i što dobijemo s time. Spomenuti ograničenje WebGL-a ovdje
+
+
+
+
+\section{Implementacija}
+
+Ukratko o Pristupu
+
+\subsection{Korištenje THREE.js-a}
+
+Opisati framewrok i u čemu nam pomaže
+
+\subsection{Učitavanje modela}
+
+Na koji način se učitavaju modeli
+
+\subsection{Korištenje više slojeva}
+
+Multi-pass rendering u THREE.js-u
+
+
+\section{Zaključak}
+
+U ovom radu je prikazan, objašnjen i programski ostvare...
+
+
+Na temelju izrađenog programskog rješenja...
+
+\section*{Literatura}
+
+Popis literature
+
+\section*{Sažetak}
+
+Uvod, drugim riječima\\
+
+
+{\bfseries Ključne riječi:} popis, ključnih, riječi.
+
+\section*{Abstract}
+
+Same as previous, but in English\\
+
+
+{\bfseries Keywords:} list, of, keywords.
+
+\section*{Životopis}
+
+Životopis... % Kopirati sa završnoga rada
+
+\section*{Prilozi(na CD-u)}
+
+Popis priloga koji se nalaze na CD-u
+\end{document}
