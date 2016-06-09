@@ -15,16 +15,16 @@ varying vec4 vPosition;
 varying vec2 vUv;
 
 void main()
-{   
+{
     // Calculate transformation
     mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
-    
+
     // Transform vertex normal
     vNormal = (MVP * vec4(normal, 1.0)).xyz;
     vLight = lightPosition;
     vPosition = MVP * vec4(position, 1.0);
     vUv = uv;
-   
+
     // transform vertex position
-	gl_Position = vPosition; 
+	gl_Position = vPosition;
 }
