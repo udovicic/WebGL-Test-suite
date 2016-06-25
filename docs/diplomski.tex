@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,12pt]{extarticle}
 
 % geometry
 \usepackage[top=25mm, bottom=25mm, left=25mm, right=20mm]{geometry}
@@ -7,10 +7,19 @@
 \usepackage[croatian]{babel}
 \usepackage[utf8]{inputenc}
 
+%slike
+\usepackage{graphicx}
+\usepackage{float}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
 %additional
 \usepackage{titlesec}
 \newcommand{\sectionbreak}{\clearpage}
 \usepackage{times}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.8em}
+\renewcommand{\baselinestretch}{1.5}
 	
 \begin{document}
 
@@ -39,37 +48,10 @@
 \tableofcontents
 
 
-\section{Uvod}
-Krakti opis racunalne grafike, uloge OpenGL-a, GLSL-a i primjene cel-shadera
-
-\subsection{Zadatak diplomskog rada}
-
-Cilj je razviti prilagođeni sustav sjenčanja za OpenGL koji će 3D modele prikazivati nefotorealistično u svrhu stvaranja dojma da su ručno nacrtani. Potrebno je razviti aplikaciju koja omogućava učitavanje  3D modela iz datoteke te ga prikazuje korištenjem prilagođenog sustava sjenčanja. Funkcionalnost razvijene aplikacije treba testirati prikazivanjem nekoliko 3D modela.
+\input{uvod.tex}
 
 
-\section{OpenGL aplikacijsko sučelje}
-
-Kratki uvod u OpenGL API
-
-\subsection{OpenGL grafički cjevovod}
-
-"Pipeline" način rada OpenGL-a, kako i zašto
-
-\subsection{GLSL}
-
-Vertex, Fragment, Geometry, tessellation shaders. Treba li spomenuti one koje WebGL nema?
-
-\subsection{Transformacije objekta}
-
-MVP - Model*View*Projection princip, te kako prosljedite varijable, gdje ih generirati (CPU ili GPU)
-
-\subsection{WebGL}
-
-Ukratko u tome što je WebGL i kako se raylikuje od ostalih OpenGL implementacija
-
-\subsection{Modeli u Three.js JSON formatu}
-
-Struktura formata
+\input{opengl.tex}
 
 
 
@@ -101,7 +83,7 @@ Ukratko o Pristupu
 
 \subsection{Korištenje THREE.js-a}
 
-Opisati framewrok i u čemu nam pomaže
+Opisati framework i u čemu nam pomaže
 
 \subsection{Učitavanje modela}
 
@@ -119,9 +101,18 @@ U ovom radu je prikazan, objašnjen i programski ostvare...
 
 Na temelju izrađenog programskog rješenja...
 
-\section*{Literatura}
+\begin{thebibliography}{9}
 
-Popis literature
+\bibitem{opengl-wiki-hostory}
+	https://www.opengl.org/wiki/History\_of\_OpenGL, posjećeno u lipnju 2016.g.
+
+\bibitem{opengl-wiki-pipeline}
+	https://www.opengl.org/wiki/Rendering\_Pipeline\_Overview, posjećeno u lipnju 2016.g.
+	
+\bibitem{opengl-es-mvp}
+	Dan Ginsburg, Budirijanto Purnomo: OpenGL ES 3.0 Programming Gide, Second Edition, 2014.g.
+
+\end{thebibliography}
 
 \section*{Sažetak}
 
