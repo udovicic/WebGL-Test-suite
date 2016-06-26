@@ -1,5 +1,10 @@
 \section{Sjenčanje (shading)}
 
+Sjenčanje je jedan od najbitnijih dijelova u 3D grafici. U ovome procesu određuje se boja pojedinoga fragmenta, u konačnici i cijeloga modela. Iako ona ne mora nužno ovisiti o nekom izvoru svjetlosti, najčešće to nije slučaj.
+
+Jedan od najjednostavnijih primjera sjenčanja je \emph{difuzno sjenčanje}, koji daje rezultat vrlo sličan onome kako ljudsko oko percipira predmete oko sobe. Jedan takav primjer prikazan je na slici \ref{fig:monkey-plastic}.
+
+
 \begin{figure}[H]
 \label{fig:monkey-plastic}
 \begin{center}
@@ -7,6 +12,15 @@
 \caption{Model osjenčan difuznom rasvjetom}
 \end{center}
 \end{figure}
+
+\emph{Difuzno sjenčanje} radi na vrlo jednostavnom principu: intenzitet osnovna boja modela se pojačava, odnosno smanjuje u ovisnosti o kutu koju zatvara zraka svjetlosti i normale plohe na koju ta zraka pada. Kako je prikazano jednadžbom \ref{eq:diffuse}, množenjem matrice normala plohe i matrice pozicije izvora svjetlosti, dobiva se faktor pojačanja. Za konačni rezultat, potrebno je faktor pojačanja pomnožiti sa osnovnom bojom modela.
+
+\begin{equation}
+\label{eq:diffuse}
+C = (N \cdot L) * B
+\end{equation}
+
+Gdje je $N$ matrica normale plohe, $L$ matrica pozicije svijetla te $B$ matrica osnovne boje modela.
 
 \subsection{Cel-shading princip}
 
