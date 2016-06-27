@@ -11,9 +11,13 @@
 \usepackage{graphicx}
 \usepackage{float}
 \floatstyle{boxed} 
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+\usepackage{amsmath}
+\numberwithin{figure}{section}
 
 %additional
 \usepackage{titlesec}
+\usepackage{amsmath}
 \newcommand{\sectionbreak}{\clearpage}
 \usepackage{times}
 \setlength{\parindent}{1.5em}
