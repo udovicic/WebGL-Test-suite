@@ -2,29 +2,29 @@
 
 % geometry
 \usepackage[top=25mm, bottom=25mm, left=25mm, right=20mm]{geometry}
+\renewcommand{\baselinestretch}{1.5}
 
-%language
+% language
 \usepackage[croatian]{babel}
 \usepackage[utf8]{inputenc}
 
-%slike
+% images
 \usepackage{graphicx}
 \usepackage{float}
-\floatstyle{boxed} 
-\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
-\usepackage{amsmath}
-\numberwithin{figure}{section}
 
-%additional
+% numbering
+\renewcommand{\thesection}{\arabic{section}.}
+\renewcommand{\thesubsection}{\thesection\arabic{subsection}.}
+\renewcommand\thefigure{\thesection\arabic{figure}}
+\renewcommand{\theequation}{\arabic{section}--\arabic{equation}}
+
+% additional
 \usepackage{titlesec}
 \usepackage{amsmath}
 \newcommand{\sectionbreak}{\clearpage}
 \usepackage{times}
 \setlength{\parindent}{1.5em}
 \setlength{\parskip}{0.8em}
-
-\renewcommand{\baselinestretch}{1.5}
-\renewcommand{\theequation}{\arabic{section}--\arabic{equation}}
 	
 \begin{document}
 
