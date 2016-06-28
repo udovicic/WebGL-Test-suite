@@ -62,7 +62,7 @@ Za te potrebe, u prvoj iteraciji iscrtana je slika modela u kojoj je boja svakog
 
 Kako je prethodno napomenutu, samu detekciju rubova spojili smo u isto iteraciju sa samim spajanjem slojeva. No za potrebe analize, ovaj korak biti će objašnjen kao zasebna cjelina.
 
-\emph{Canny}-ev algoritam detekcije rubova zasniva se na principu traženja razlike u kontrastu susjednih \emph{pixel}-a. U koliko ta razlika prelazi određenu vrijednost, smatra se da trenutni \emph{pixel} predstavlja rub na slici.
+\emph{Canny}-ev algoritam detekcije rubova\cite{opencv-canny} zasniva se na principu traženja razlike u kontrastu susjednih \emph{pixel}-a. U koliko ta razlika prelazi određenu vrijednost, smatra se da trenutni \emph{pixel} predstavlja rub na slici.
 
 Kontrast između susjednih \emph{pixel}-a. određuje se tako da se susjedstvo piksela pomnoži sa \emph{maskom}. Zbroj svih elemenata dobivene matrice predstavlja vrijednost trenutno \emph{pixel}-a. Budući da \emph{Canny}-eva \emph{maska} radi samo u jednome pravcu, detekciju je potrebno izvršiti dva puta, za smjer posebno. \emph{Maske} korištene za ovu potrebu predstavljene su matricama $C_x$ i $C_y$ prikazanim u (\ref{eq:canny-kernel}).
 
