@@ -151,7 +151,7 @@ function Editor(vertex, fragment, model, preview) {
         // Render scene
         try {
 
-            // First pass - normals
+            // First pass - depth
             this.gl_object.material.uniforms.pass.value = 1;
             this.gl_object.material.uniforms.tNormal.value = this.gl_texture_dummy;
             this.gl_object.material.uniforms.tToon.value = this.gl_texture_dummy;
