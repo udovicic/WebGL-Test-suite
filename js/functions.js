@@ -69,14 +69,6 @@ $('ul.nav').children('li').on('click', function() {
     }, 10);
 });
 
-// Load from local storage
-jQuery('#selProfile').on('change', function() {
-    preview.load(jQuery('#selProfile').val())
-        .stop()
-        .initObject()
-        .render();
-});
-
 // Save to local storage
 jQuery('#btnSave').on('click', function() {
     preview.save(jQuery('#selProfile').val());
