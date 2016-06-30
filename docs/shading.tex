@@ -1,4 +1,5 @@
 \section{Sjenčanje (shading)}
+\label{sec:shading}
 
 Sjenčanje je jedan od najbitnijih dijelova u 3D grafici. U ovome procesu određuje se boja i osvjetljenje pojedinoga fragmenta, te u konačnici i cijeloga modela. Iako ona ne mora nužno ovisiti o nekom izvoru svjetlosti, najčešće to nije slučaj.
 
@@ -49,6 +50,7 @@ Kao posljedica toga dolaze performanse \emph{toon shadera}, koji je (u ovoj impl
 Sljedeća poglavlja opisuju svaki korak zasebno, te finalno spajanje slojeva u konačnu sliku koja se prikazuje korisniku.
 
 \subsection{Iscrtavanje obrisa i rubova}
+\label{sec:edge-detection}
 
 Prvi korak u \emph{toon shading}-u je ekstrakcija rubova. Iako postoji mnogo načina da se ovaj korak uradi, najjednostavniji je korištenjem \emph{Canny}-evog algoritma detekcije rubova. Budući da se ta metoda zasniva na pronalaženju razlike u kontrastu susjednih \emph{pixel}-a slike, potrebno je posebno prirediti sliku na kojoj će se detektor izvršiti.
 
