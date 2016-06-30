@@ -1,0 +1,9 @@
+\section{Zaključak}
+
+U ovom radu je prikazan, objašnjen i programski ostvaren \emph{toon shader} način sjenčanja, kao i popratna aplikacija koja omogućava izvršavanje \emph{shader} korisničkoga programa. U teorijskom dijelu opisane su korištene tehnologije, način rada modernih grafičkih kartica kao i osnove tranformacije objekata u 3D prostoru, kao i način rada \emph{toon-shading} algoritma. Također je opisan način rada i korištenja korisničke aplikacije koja se koristi za pregled rezultata i unos podataka.
+
+Na temelju izrađenoga programskog rješenja prikazan je način korištenja \emph{OpenGL}-a, odnosno \emph{WebGL}-a pomoću \emph{three.js} biblioteke. Za potrebe rada samoga algoritma opisan je način detekcije rubova na računalnoj slici, te difuzni način sjenčanja, kao i njegova pojednsotavljena varijanta. Prikazano je na koji način se implementiraju algoritmi sjenčanje koji zahtjeva rad u više iteracija, te kako se problem međuspremnik rješava korištenjem \emph{OpenGL} teksturama.
+
+Izradom korisničkog sučelja, prikazan je način implementacije koji omogućava izvršavanje aplikacije neovisno o uređaju i operativnom sustavu na kojem se aplikacija izvršava, pri čemu su korištene \emph{HTML 5} tehnologije i \emph{JavaScript} programski jezik
+
+Prilikom izrade aplikacije, uočeno je ograničenje \emph{OpenGL} implementacije, koje onemogućava implementaciju algoritma u jednoj iteraciji. Iako je stapanje određenih koraka u jednu iteraciju smanjilo kompleksnost algoritma, on i dalje zahtjeva više od jednoga koraka. Kao posljedica ovoga, krajnja aplikacija j tri puta sporija od jednostavnijih \emph{shader}  korisničkih programa.
