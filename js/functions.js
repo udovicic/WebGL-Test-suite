@@ -71,7 +71,7 @@ $('ul.nav').children('li').on('click', function() {
 
 // Save to local storage
 jQuery('#btnSave').on('click', function() {
-    preview.save(jQuery('#selProfile').val());
+    preview.save(1);
     displayMessage("Success", "Code has been save to your browser");
 });
 
