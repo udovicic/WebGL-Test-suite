@@ -1,10 +1,10 @@
 \section{Implementacija}
 
-Prethodna poglavlja opisivala su metodu \emph{toon shading}-a, te način implementacija koji se svodi na izradu \emph{shader} programa. No sam \emph{shader} program, izvodi se na grafičkoj kartici. U ovom poglavlju opisuje se sučelje koje je izrađeno za potrebe rada, koje krajnjem korisniku omogućava izmjenu modela i \emph{shader} programa. Opisuje se način implemntacije, te interakcija sa grafičkom karticom korištenjem \emph{three.js} biblioteke za rad s WebGL-om.
+Prethodna poglavlja opisivala su metodu \emph{toon shading}-a te način implementacija koji se svodi na izradu \emph{shader} programa. No sam \emph{shader} program, izvodi se na grafičkoj kartici. U ovom poglavlju opisuje se sučelje koje je izrađeno za potrebe rada, koje krajnjem korisniku omogućava izmjenu modela i \emph{shader} programa. Opisuje se način implemntacije, te interakcija sa grafičkom karticom korištenjem \emph{three.js} biblioteke za rad s WebGL-om.
 
 Aplikacija je izrađena pomoću HTML5 tehnologije i \emph{JavaScrip} programskog jezika. Na taj način, omogućeno je izvršavanje neovisno o platformi na većini modernih internet preglednika, te uređajima koji podržavaju HTML5 \emph{canvas} element. Budući da mogućnost izvršavanja aplikacije ovisi o grafičkom procesoru i karakteristikama samoga uređaja, korištena je biblioteka \emph{modernizer}\footnote{https://modernizr.com/} za određivanje sklopovske podrške samoga uređaja na kojemu se aplikacija izvršava.
 
-Aplikacija podržava statični prikaz modela, te animaciju rotacijom modela oko svoje osi, kako bi se mogućnosti \emph{shader} korisničkoga programa mogle proučiti iz više kutova pod različitom rasvjetom. Izrađen je na način da se prilagođava veličini ekrana, kako bi se mogla izvršavati na uređajima raznih veličina. Korisničko sučelje prikazano je na slici \ref{fig:interface}.
+Aplikacija podržava statični prikaz modela te animaciju rotacijom modela oko svoje osi, kako bi se mogućnosti \emph{shader} korisničkoga programa mogle proučiti iz više kutova pod različitom rasvjetom. Izrađen je na način da se prilagođava veličini ekrana, kako bi se mogla izvršavati na uređajima raznih veličina. Korisničko sučelje prikazano je na slici \ref{fig:interface}.
 
 \begin{figure}[H]
 \centering\fbox{\includegraphics[scale=0.2]{interface.png}}
@@ -14,13 +14,13 @@ Aplikacija podržava statični prikaz modela, te animaciju rotacijom modela oko 
 
 \subsection{Korištenje \emph{three.js}-a}
 
-\emph{Three.js} \cite{threejs-github} biblioteka napisana je u JavaScript programskom jeziku, i služi za kreiranje i prikaz 3D sadržaja u internet preglednicima. Sama biblioteka omogućava krajnjem korisniku brži pristup grafičko kartici, te olakšava procese učitavanja i prijenosa modela. Također omogućava lakši rad sa korisničkim \emph{shader} programima.
+\emph{Three.js} \cite{threejs-github} biblioteka napisana je u JavaScript programskom jeziku i služi za kreiranje i prikaz 3D sadržaja u internet preglednicima. Sama biblioteka omogućava krajnjem korisniku brži pristup grafičko kartici, te olakšava procese učitavanja i prijenosa modela. Također omogućava lakši rad sa korisničkim \emph{shader} programima.
 
 Prva javno dostupna verzija biblioteke pojavila se početkom 2010.g. Od onda se razvija kao projekt otvorenoga koda pod \emph{MIT licencom}. Svoju popularnost počela je postizati godinu dana kasnije, kada je internet preglednik \emph{Firefox} razvio podršku za WebGL. Trenutno broji preko 600 suradnika koji su doprinijeli izvornom kodu.
 
 \subsection{Učitavanje modela}
 
-Aplikacija učitava modele u \emph{three.js JSON} formatu. Većina današnjih alata za 3D modeliranje podržava ovaj format nativno, ili kroz dodatke koji se naknadno instaliraju na aplikaciju. Za potrebe ovoga rada, korišten je programski alat \emph{Blender}\footnote{https://www.blender.org/}, pomoću kojega je u \emph{three.js JSON} formatu izvezena prilagođena verzija modela \emph{monkey} koji dolaz sa alatom, prikazan na slici \ref{fig:blender-monkey}.
+Aplikacija učitava modele u \emph{three.js JSON} formatu. Većina današnjih alata za 3D modeliranje podržava ovaj format nativno ili kroz dodatke koji se naknadno instaliraju na aplikaciju. Za potrebe ovoga rada korišten je programski alat \emph{Blender}\footnote{https://www.blender.org/}, pomoću kojega je u \emph{three.js JSON} formatu izvezena prilagođena verzija modela \emph{monkey} koji dolaz sa alatom, prikazan na slici \ref{fig:blender-monkey}.
 
 \begin{figure}[H]
 \centering\fbox{\includegraphics[scale=0.3]{blender_monkey.png}}
@@ -28,9 +28,9 @@ Aplikacija učitava modele u \emph{three.js JSON} formatu. Većina današnjih al
 \label{fig:blender-monkey}
 \end{figure}
 
-Unutar same aplikacije, korišten je \emph{three.js} osnovni objekt \emph{THREE.JSONLoader} \footnote{http://threejs.org/docs/api/loaders/JSONLoader.html} koji je zadužen za kreiranje samoga modela na grafičkoj kartici preko ulazne datoteke. \emph{THREE.JSONLoader} objektu se prosljeđuje sadržaj same datoteke u tekstualnom formatu.
+Unutar same aplikacije korišten je \emph{three.js} osnovni objekt \emph{THREE.JSONLoader} \footnote{http://threejs.org/docs/api/loaders/JSONLoader.html} koji je zadužen za kreiranje samoga modela na grafičkoj kartici preko ulazne datoteke. \emph{THREE.JSONLoader} objektu se prosljeđuje sadržaj same datoteke u tekstualnom formatu.
 
-Korisničko sučelje aplikacije učitava sadržaj datoteke na način da korisnik sadržaj mora unijeti u za to predviđeno mjesto (na kartici \emph{JSON model}), te potvrditi svoj unos pritiskom na tipku \emph{Save}. U tome trenutku aplikacija će korisnički unos spremiti u lokalno spremište internet preglednika, kako korisnik ne bi morao ponavljati ovu radnju prilikom sljedećega korištenja aplikacije. Prilikom uspješnoga spremanja izmjena korisnik dobiva obavijest kao što je prikazano na slici \ref{fig:interface-save}.
+Korisničko sučelje aplikacije učitava sadržaj datoteke na način da korisnik sadržaj mora unijeti u za to predviđeno mjesto (na kartici \emph{JSON model}) te potvrditi svoj unos pritiskom na tipku \emph{Save}. U tome trenutku aplikacija će korisnički unos spremiti u lokalno spremište internet preglednika, kako korisnik ne bi morao ponavljati ovu radnju prilikom sljedećega korištenja aplikacije. Prilikom uspješnoga spremanja izmjena korisnik dobiva obavijest kao što je prikazano na slici \ref{fig:interface-save}.
 
 \begin{figure}[H]
 \centering\fbox{\includegraphics[scale=0.3]{interface_success.png}}
@@ -75,7 +75,7 @@ Kako bi omogućili \emph{shader} korisničkom programu dostupnost rezultata iz p
 
 \subsection{Pokretanje aplikacije}
 
-Nakon što je korisnik unio izvorni kod \emph{shader} programa, te nakon što je unio 3D model, potrebno je odabrati način prikaza modela:
+Nakon što je korisnik unio izvorni kod \emph{shader} programa te nakon što je unio 3D model, potrebno je odabrati način prikaza modela:
 
 \begin{itemize}
 \item \textbf{Statični prikaz:} Pritiskom na tipku \emph{Redner} pokreće se statični prikaz osjenčanoga modela gdje je model okrenut izravno prema kameri. Dobiva se rezultat kao što je prikazan na slici \ref{fig:monkey-final}.
