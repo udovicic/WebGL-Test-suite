@@ -32,7 +32,7 @@ Iz tog razloga, pojavila se potreba za programabilnim \emph{grafičkim cjevovodo
 
 \item \textbf{Rasterizacija:} Sklopljene plohe razdvajaju se na fragment koji se prosljeđuju dalje kako bi im se odredila boja, odnosno tekstura.
 
-\item \textbf{Fragment shader:} Svaki fragment se prosljeđuje korisničkom programu fragment shaderu) čiji izlaz predstavlja boju danoga fragmenta.
+\item \textbf{Fragment shader:} Svaki fragment se prosljeđuje korisničkom programu fragment shaderu) čiji izlaz predstavlja boju danog fragmenta.
 
 \item \textbf{Procesiranje po uzorku:} Ovaj korak služi za izvršavanje raznih testova koji mogu utjecati na krajnji rezultat, primjerice test dubine (ukoliko se fragment nalazi iza nekog drugog, vjerojatno neće biti prikazan). Također ovdje se vrše operacije i odbacivanja fragmenata koji nisu na vidljivom djelu ekrana, stapanje boja i sl.
 
@@ -48,15 +48,15 @@ Korisničke aplikacije za vertex i fragment shader (opcinoalno i geometrijski) s
 
 Shaderi se pišu programskom jeziku koji je posebno dizajniran za ovu primjenu - GLSL \footnote{engl. OpenGL Shading Language}. GLSL programski jezik baziran je na C programskom jezu, i dio je OpenGL specifikacije. Razlikuje se od C-a u nekoliko ključnih stvari: nadograđen je da podržava matrične operacije i tipove podataka. Za razliku od C-a, ne podržava preopterećenje funkcija na osnovu ulaznih parametara niti rekurzivne funkcije.
 
-Svaki shader rasolaže sa nekoliko ulaznih varijabli:
+Svaki shader rasolaže s nekoliko ulaznih varijabli:
 
 \begin{itemize}
 
-\item \textbf{Ulazne varijable:} Svaki shader imaju svoju glavnu ulaznu varijablu. Za vertex shader to je \emph{position}, vektor s četiri vrijednosti koji opisuje početnu poziciju objekta u 3D prostoru. Četvrta vrijednost (w) označava orijentaciju. U slučaju fragment shadera, stvar je malo složenija, jer se samom fragmentu ne mora nužno dodijeliti samo boja, već se može dodjeliti i komad teksture. Naziv samih varijabli ovisi o načinu učitavanja modela, odnosno ime se proizvoljno dodijeljuje kod učitavanja modela.
+\item \textbf{Ulazne varijable:} Svaki shader imaju svoju glavnu ulaznu varijablu. Za vertex shader to je \emph{position}, vektor s četiri vrijednosti koji opisuje početnu poziciju objekta u 3D prostoru. Četvrta vrijednost (w) označava orijentaciju. U slučaju fragment shadera, stvar je malo složenija, jer se samom fragmentu ne mora nužno dodijeliti samo boja, već se može dodjeliti i komad teksture. Naziv samih varijabli ovisi o načinu učitavanja modela, odnosno ime se proizvoljno dodjeljuje kod učitavanja modela.
 
 \item \textbf{Uniform varijable:} Ovo su varijable koje su dostupne svim shaderima. Njihovu vrijednost postavlja glavni program prije početka rendering procesa, te ona ostaje ista tokom cijelog izvođenja. Ove varijable se najčešće koriste za prijenos MVP\footnote{engl. Model View Projection} matrica, koje su obrađene u sljedećem poglavlju.
 
-\item \textbf{Varying varijable:} Ovo su varijable koje su dostupne svim shaderima, no njihovu vrijednost postavlja jedan shader, kako bi određenu informaciju mogao proslijediti dalje niz cjevovod. Primjerice, normala vertexa ulazni je parametar vertex shadera. No ta vrijednost često je potrbna fragmen shaderu kako bi pravilno odredio sjenčanje objekta. Iz toga razloga, često se definira \emph{varying} varijabla, čija se vrijednost postavlja unutar vertex shadera za daljnje korištenje.
+\item \textbf{Varying varijable:} Ovo su varijable koje su dostupne svim shaderima, no njihovu vrijednost postavlja jedan shader, kako bi određenu informaciju mogao proslijediti dalje niz cjevovod. Primjerice, normala vertexa ulazni je parametar vertex shadera. No ta vrijednost često je potrebna fragmen shaderu kako bi pravilno odredio sjenčanje objekta. Iz toga razloga, često se definira \emph{varying} varijabla, čija se vrijednost postavlja unutar vertex shadera za daljnje korištenje.
 \end{itemize}
 
 Izlaz iz vertex shader-a je varijabla \emph{gl\_Position} \footnote{Interna OpenGL varijabla koja opisuje položaj trenutnog vertexa u 3D prostoru}, dok je izlaz fragment shader-a varijabla \emph{gl\_FragColor} \footnote{Interna OpenGL varijabla koja opisuje boju treutnog fragmenta}. Iako su ovi izlazi nužni za rad, pojedini shaderi su često zaduženi za kalkulaciju i niz drugih \emph{varying} varijabli koje će se koristiti dalje u grafičkom cjevovodu.
@@ -87,7 +87,7 @@ Kao i OpenGL, WebGL također ima programabilan grafički cjevovod, uz ograničen
 
 \subsection{Modeli u Three.js JSON formatu}
 
-Kao i OpenGL, WebGL propisuje funkcije za pristupanje grafičkom sučelju na vrlo niskoj razini, što za korisnika znači da mora sam voditi računa o alokaciji memorije i prijenosu podataka. Iz tog razloga, postoji mnogo frameworka koji se zaduženi za olakšavanje rada s nekim bazičnim stvarima.
+Kao i OpenGL, WebGL propisuje funkcije za pristupanje grafičkom sučelju na vrlo niskoj razini, što za korisnika znači da mora sam voditi računa o alokaciji memorije i prijenosu podataka. Iz tog razloga, postoji mnogo frameworka koji se zaduženi za olakšavanje rada s nekim osnovnim stvarima.
 
 Za potrebe ovoga rada, korišten je three.js \footnote{http://threejs.org/ verzija 73}, WebGL framework koji olakšava poslove poput prijenosa modela u memoriju grafičke kartice, kao i postupak kompajliranja korisničkih sahadera.
 
@@ -96,9 +96,9 @@ Kao format spremanja 3D modela, korišten je three.js JSON format, budući da je
 \begin{itemize}
 \item \textbf{vertices:} Popis vertex, pri čemu je svaki opisan sa tri koordinate: x,y i z. Ovo polje more biti proizvoljne duljina, ali je bitno da je višekratnik broja 3.
 
-\item \textbf{normals:} Kao i vertex-i, normalne s opisane sa tri koordinate. Njihov broj pak ovisi o vrsti ravnina koju vertex-i opsiuju: trokuti, četverokuti, ...
+\item \textbf{normals:} Kao i vertex-i, normale su opisane sa tri koordinate. Njihov broj pak ovisi o vrsti ravnina koju vertex-i opsiuju: trokuti, četverokuti, ...
 
-\item \textbf{faces:} Ovo polje opisuje koji vertexi i normale (opcinalno i teksture i boje) čine jednu plohu. Prvi broj u nizu definira masku pod kojom se učitavaju ostali podaci. Evo nekoliko primjera:
+\item \textbf{faces:} Ovo polje opisuje koji vertexi i normale (proizvoljno i teksture i boje) čine jednu plohu. Prvi broj u nizu definira masku pod kojom se učitavaju ostali podaci. Evo nekoliko primjera:
 
 \begin{itemize}
 
@@ -109,7 +109,7 @@ Kao format spremanja 3D modela, korišten je three.js JSON format, budući da je
 
 \item \textbf{metadata:} Ovo polje sadrži opisne podatke poput verzije samog formata, broj vertexa, normala i ploha, informacije o programu s kojim je model kreiran i sl.
 
-\item \textbf{scale:} Pomoću ovog paramtera omogućeno je jednostavno skaliranje modela.
+\item \textbf{scale:} Pomoću ovog parametra omogućeno je jednostavno skaliranje modela.
 
 \item \textbf{name:} Ovo polje sadrži ime modela.
 
