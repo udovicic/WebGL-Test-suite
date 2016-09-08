@@ -66,11 +66,99 @@ Izlaz iz vertex shader-a je varijabla \emph{gl\_Position} \footnote{Interna Open
 Kako je ranije spomenuto, ideja programabilnog grafičkog cjevovoda je pomaknuti grafičke kalkulacije sa centralnog procesora na grafički procesor. To prvenstveno znači rekalkulaciju pozicije i oblika objekta uslijed pomaka samog objekta ili kamere. To se najčešće vrši množenjem kordinata pojedine točke objekta sa takozvanom MVP \footnote{engl. Model View Projection} matricom. MVP matrica se sastoji iz tri dijela \cite{opengl-es-mvp}:
 
 \begin{enumerate}
-\item \textbf{Matrica modela:} Matrica koja opisuje osnovne transformacije modela: translaciju, rotaciju i skaliranje. Dobiva se množenjem istoimenih matrica.
+\item \textbf{Matrica modela:} Matrica koja opisuje osnovne transformacije modela: translaciju (\ref{eq:model-translate}), rotaciju (\ref{eq:model-rotate-x})-(\ref{eq:model-rotate-z}) i skaliranje (\ref{eq:model-scale}). Dobiva se množenjem istoimenih matrica.
+
+\begin{equation}
+\label{eq:model-translate}
+	T = 
+	\begin{bmatrix}
+		1 & 0 & 0 & T_x\\
+		0 & 1 & 0 & T_y\\
+		0 & 0 & 1 & T_z\\
+		0 & 0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:model-rotate-x}
+	R_x = 
+	\begin{bmatrix}
+		1 & 0 & 0 & 0\\
+		0 & cos(\alpha) & -sin(\alpha) & 0\\
+		0 & sin(\alpha) & \cos(\alpha) & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix},\\
+\end{equation}
+\begin{equation}
+\label{eq:model-rotate-y}
+	R_y = 
+	\begin{bmatrix}
+		cos(\alpha) & 0 & sin(\alpha) & 0\\
+		0 & 1 & 0 & 0\\
+		-sin(\alpha) & 0 & \cos(\alpha) & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix},
+\end{equation}
+\begin{equation}
+\label{eq:model-rotate-z}
+	R_z = 
+	\begin{bmatrix}
+		cos(\alpha) & -sin(\alpha) & 0 & 0\\
+		sin(\alpha) & \cos(\alpha) & 0 & 0\\
+		0 & 0 & 1 & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:model-scale}
+	S = 
+	\begin{bmatrix}
+		S_x & 0 & 0 & 0\\
+		0 & S_y & 0 & 0\\
+		0 & 0 & S_z & 0\\
+		0 & 0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
 
 \item \textbf{Matrica scene (view):} Budući da se u računalnoj grafici kamera ne pomiče, već se pomiče svijet oko nje - ova matrica služi kako bi ispravno pozicionirala objekt u odnosu na kameru.
 
-\item \textbf{Projekcijska matrica:} Služi za definiranje transformacije s ciljem postizanja željene projekcije. To je najčešće perspektivna projekcija, no može biti ortogonalna i bilo kako drugo definirana.
+\item \textbf{Projekcijska matrica:} Služi za definiranje transformacije s ciljem postizanja željene projekcije. To je najčešće perspektivna projekcija (prikazana na slici \ref{fig:projection-perspective} te opisana u \ref{eq:perspective-matrix}), no može biti ortogonalna (prikazana na slici \ref{fig:projection-ortho} te opisana u \ref{eq:ortographic-matrix}) prikazana na slici i bilo kako drugo proizvoljno definirana.
+
+\begin{figure}[H]
+\centering\fbox{\includegraphics[scale=0.4]{projection_perspective.png}}
+\caption{Perspektivna projekcija\cite{blender-projection}}
+\label{fig:projection-perspective}
+\end{figure}
+
+\begin{equation}
+\label{eq:perspective-matrix}
+	P_p = 
+	\begin{bmatrix}
+		\dfrac{2 * blizu}{desno - ljevo} & 0 & \dfrac{desno + ljevo}{desno - ljevo} & 0\\
+		0 & \dfrac{2 * blizu}{gore - dolje} & \dfrac{gore + dolje}{gore - dolje} & 0\\
+		0 & 0 & -\dfrac{daleko + blizu}{daleko - blizu} & -\dfrac{2 * daleko * blizu}{daleko - blizu}\\
+		0 & 0 & -1 & 0
+	\end{bmatrix}
+\end{equation}
+
+\begin{figure}[H]
+\centering\fbox{\includegraphics[scale=0.4]{projection_ortho.png}}
+\caption{Ortogonalna projekcija\cite{blender-projection}}
+\label{fig:projection-ortho}
+\end{figure}
+
+\begin{equation}
+\label{eq:ortographic-matrix}
+	P_o = 
+	\begin{bmatrix}
+		\dfrac{2}{desno - ljevo} & 0 & 0 & -\dfrac{desno + ljevo}{desno - ljevo}\\
+		0 & \dfrac{2}{gore - dolje} & 0 & -\dfrac{gore + dolje}{gore - dolje}\\
+		0 & 0 & -\dfrac{2}{daleko - blizu} & -\dfrac{daleko + blizu}{daleko - blizu}\\
+		0 & 0 & 0 & 1
+	\end{bmatrix}
+\end{equation}
+
 \end{enumerate}
 
 Sam izračun MVP matrice, obično se vršri na centralnoj procesorskoj jedinici i kao takav se dostavlja grafičkoj kartici. Ona je zatim zadužena da svaki pojedini vertex pozicionira na pravo mjesto, uzimajući MVP matricu u obzir - pomnoži koordinate vertxa sa MVP matricom da dobije konačnu poziciju u prostoru.
